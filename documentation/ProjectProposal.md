@@ -19,5 +19,5 @@
 
 ---
 ## Algorithm:
-    
+    -See block diagram
 ---
