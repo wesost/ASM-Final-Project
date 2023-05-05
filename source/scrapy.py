@@ -19,29 +19,40 @@
 # --------------
 # PROGRAM START:
 # --------------
-from selenium import webdriver              # Used to open and search webpages
-from selenium.webdriver.common.by import By # Used for searching webpages by their HTML or CSS elements
-import serial                               # Used for webscraping
-import re                                   # Used to format and edit strings of information
-import time                                 # Used to time the process of sending information
-import array                                # Used to work with arrays
-import random                               # Used to select random indexs from arrays
+from selenium import webdriver                                      # Used to open and search webpages
+from selenium.webdriver.support.ui import WebDriverWait             # Used to access the webdriverwait class and functionality
+from selenium.webdriver.support import expected_conditions as EC    # Used for wait function - allow us to ensure webpage has loaded
+from selenium.webdriver.common.by import By                         # Used for searching webpages by their HTML or CSS elements
+import serial                                                       # Used for webscraping
+import re                                                           # Used to format and edit strings of information
+import time                                                         # Used to time the process of sending information
+import array                                                        # Used to work with arrays
+import random                                                       # Used to select random indexs from arrays
 
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # SCRAP FOR INFO:
 # ---------------
 edge_driver_path = "edgedriver_win64\msedgedriver.exe"                                                                   # set the path to the Edge driver executable file
-driver = webdriver.Edge(executable_path=edge_driver_path)                                                                # create an instance of the Edge driver
+
+# Set the options for running the browser in headless mode
+options = webdriver.EdgeOptions()
+options.add_argument('headless')                                                                                        # Stops the webpage window from appearing every time script runs
+
+# Create an instance of the Edge driver with headless options
+driver = webdriver.Edge(executable_path=edge_driver_path, options=options)                                             
 driver.get("https://forecast.weather.gov/MapClick.php?x=210&y=120&site=otx&zmx=&zmy=&map_x=209&map_y=120#.ZElK5c7MLl0")  # navigate to a weather.gov spokane washingtons page
 
-# extract some information from the website using Selenium
-todaysTemp = driver.find_element(By.CLASS_NAME, "myforecast-current-lrg")                                                # Looks for the current temp of Spokane in F
-todaysTemp_text = todaysTemp.text                                                                                        # Transfers that data into text for printing
-# todaysWeather = driver.find_element(By.CLASS_NAME, "myforecast-current")
-# todaysWeather_text = todaysWeather.text               
+# Wait for the temperature element to appear for a maximum of 4 seconds
+# Allows us to ensure webpage is loaded fully before we grab the info
+element = WebDriverWait(driver,43).until(
+    EC.presence_of_element_located((By.CLASS_NAME, "myforecast-current-lrg"))
+)
 
-# print("WEATHER: ", todaysWeather_text)
+# Extract some information from the website using Selenium
+todaysTemp = driver.find_element(By.CLASS_NAME, "myforecast-current-lrg")                                                # Looks for the current temp of Spokane in F
+todaysTemp_text = todaysTemp.text                                                                                        # Transfers that data into text for printing        
+
 print("TEMP: ", todaysTemp_text)                                                                                         # Prints the data to terminal to see if it is correct
 
 driver.quit()                                                                                                            # close the browser window when done
