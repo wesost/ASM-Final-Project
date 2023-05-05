@@ -130,7 +130,7 @@ setOvercast:
 	out PORTD, r17		; Output r17 to PORTD
 	lds r17, UCSR0A		; Load data from UCSR0A into r17
 	sbrs r17, RXC0		; Check if the receive buffer is empty
-	rjmp setOvercast		; If the receive buffer is empty, continue waiting
+	rjmp setOvercast	; If the receive buffer is empty, continue waiting
 
 	lds r16, UDR0		; Load the next byte from the receive buffer
 	out PORTD, r16		; Output r16 to PORTD
