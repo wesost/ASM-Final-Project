@@ -7,45 +7,120 @@
 #
 # Resources:
 # ----------
-# 
+# https://pypi.org/project/selenium/
+# https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+# https://www.geeksforgeeks.org/selenium-python-tutorial/
+# https://docs.python.org/3/library/re.html
+# https://docs.python.org/3/library/time.html
+# Scott Office Hours 
+# https://whitgit.whitworth.edu/2023/spring/CS-278-1/in_class/-/blob/main/Directives_EEPROM_class/source/mem_testing_solution.asm
 
 
 # --------------
 # PROGRAM START:
 # --------------
-#from selenium import webdriver
-#from selenium.webdriver.common.by import By
-import serial
+from selenium import webdriver              # Used to open and search webpages
+from selenium.webdriver.common.by import By # Used for searching webpages by their HTML or CSS elements
+import serial                               # Used for webscraping
+import re                                   # Used to format and edit strings of information
+import time                                 # Used to time the process of sending information
+import array                                # Used to work with arrays
+import random                               # Used to select random indexs from arrays
 
-# set the path to the Edge driver executable file
-#edge_driver_path = "edgedriver_win64\msedgedriver.exe"
 
-# create an instance of the Edge driver
-#driver = webdriver.Edge(executable_path=edge_driver_path)
-
-# navigate to a weather.gov spokane washingtons page
-#driver.get("https://forecast.weather.gov/MapClick.php?x=210&y=120&site=otx&zmx=&zmy=&map_x=209&map_y=120#.ZElK5c7MLl0") 
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# SCRAP FOR INFO:
+# ---------------
+edge_driver_path = "edgedriver_win64\msedgedriver.exe"                                                                   # set the path to the Edge driver executable file
+driver = webdriver.Edge(executable_path=edge_driver_path)                                                                # create an instance of the Edge driver
+driver.get("https://forecast.weather.gov/MapClick.php?x=210&y=120&site=otx&zmx=&zmy=&map_x=209&map_y=120#.ZElK5c7MLl0")  # navigate to a weather.gov spokane washingtons page
 
 # extract some information from the website using Selenium
-#todaysTemp = driver.find_element(By.CLASS_NAME, "myforecast-current-lrg") # Looks for the current temp of Spokane in F
-#todaysTemp_text = todaysTemp.text                                      # Transfers that data into text for printing
-#todaysWeather = driver.find_element(By.CLASS_NAME, "myforecast-current")
-#todaysWeather_text = todaysWeather.text               
+todaysTemp = driver.find_element(By.CLASS_NAME, "myforecast-current-lrg")                                                # Looks for the current temp of Spokane in F
+todaysTemp_text = todaysTemp.text                                                                                        # Transfers that data into text for printing
+# todaysWeather = driver.find_element(By.CLASS_NAME, "myforecast-current")
+# todaysWeather_text = todaysWeather.text               
 
-#print("WEATHER: ", todaysWeather_text)
-#print("TEMP: ", todaysTemp_text)                                          # Prints the data to terminal to see if it is correct
+# print("WEATHER: ", todaysWeather_text)
+print("TEMP: ", todaysTemp_text)                                                                                         # Prints the data to terminal to see if it is correct
 
-
-# close the browser window when done
-#driver.quit()
-
-# replace 'COM4' with the actual COM port number
-ser = serial.Serial('COM4', 9600)
-
-# send data over USART
-ser.write(b'\x50')
-
-# close the serial port
-ser.close()
+driver.quit()                                                                                                            # close the browser window when done
 
 
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# SEND INFO TO CHIP:
+# ------------------
+ser = serial.Serial('COM4', baudrate=9600, bytesize=8, parity='N', stopbits=2) # replace 'COM4' with the actual COM port number
+ser.write(0X00)                                                                # Send a null value to the chip to trigger a reset
+time.sleep(2)                                                                  # Wait for the chip to setup before we send any further information (Waits 2 seconds)
+
+# FORMAT TODAYS TEMP:
+# -------------------
+#  -> Gets TempText ready to be sent to chip to be processed
+hex_val = str(re.findall(r'\d+', todaysTemp_text)[0])           # extract the number part from todaysTemp_text
+byte_val = bytes.fromhex(hex_val)                               # Format tempreture into bytes
+print(f"About to send {byte_val.hex()} to Arduino")             # Print todaysTemp to the terminal - testing purposes
+
+weatherTypes = ["Clear", "Overcast", "Showers", "T-storms"]     # Creates an array of random weaher types (Used to show how program works with different weather types, weather doesnt change frequently enough) 
+random_index = random.randrange(len(weatherTypes))              # Selects a random index/weather type from the array above
+random_element = weatherTypes[random_index]                     # Sets random element to the random array index
+todaysWeather_text = random_element                             # THen the program assigns that random element as the weather type for that day
+print(todaysWeather_text)                                       # Print weather type to the terminal for testing 
+
+# CONFIGURE WEATHER MESSAGE: 
+# --------------------------
+#  -> Takes the weather type and tempreture and formats it in for the ATmega to process
+#  -> A message looks like this, $00 - $Todays Weather type - $Todays Tempreture EX: $00 - $40 - $64
+#  -> The message above indicates its thunder storms and currently 64 degreee 
+#  -> The $00 value is used to tell the chip to get ready to process information
+
+msgSend = bytes.fromhex('00')           # Sets the value of msgSend to $00 - used before every message 
+clv = bytes.fromhex('10')               # Sets a clear weather type to $10
+ocv = bytes.fromhex('20')               # Sets a Overcast weather type to $20
+shv = bytes.fromhex('30')               # Sets a Showers weather type to $30
+tsv = bytes.fromhex('40')               # Sets a Thunder storms weather type to $40
+
+# Each if Statemet below is as follows:
+# 1.) Check if WeatherType is X
+# 2.) If yes create a message based of that 
+# 3.) Send $00
+# 4.) Wait to give chip time to process
+# 5.) Send weahter type
+# 6.) Wait again
+# 7.) Send the temp
+
+if todaysWeather_text == "Clear":                   # Check if Clear today
+    ser.write(msgSend)                              
+    time.sleep(2)                                   
+    ser.write(clv)                                  
+    time.sleep(2)                                   
+    ser.write(byte_val)                             
+    print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
+
+elif todaysWeather_text == "Overcast":              # Check if Overcast toady
+    ser.write(msgSend)                              
+    time.sleep(2)                                  
+    ser.write(ocv)                                 
+    time.sleep(2)                                  
+    ser.write(byte_val)                             
+    print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
+
+elif todaysWeather_text == "Showers":               # Check if Rainy
+    ser.write(msgSend)
+    time.sleep(2)
+    ser.write(shv)
+    time.sleep(2)
+    ser.write(byte_val)
+    print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
+
+elif todaysWeather_text == "T-storms":              #Check if Thunderin and Rumblin
+    ser.write(msgSend)
+    time.sleep(2)
+    ser.write(tsv)
+    time.sleep(2)
+    ser.write(byte_val)
+    print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
+
+ser.close()                                         # close the serial port
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
