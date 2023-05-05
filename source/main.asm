@@ -137,7 +137,7 @@ setOvercast:
 	rjmp endRx			; Return from the interrupt
 
 setShowers:
-	ldi r17, $30		; Set r17 to $20
+	ldi r17, $30		; Set r17 to $30
 	out PORTD, r17		; Output r17 to PORTD
 	lds r17, UCSR0A		; Load data from UCSR0A into r17
 	sbrs r17, RXC0		; Check if the receive buffer is empty
@@ -148,7 +148,7 @@ setShowers:
 	rjmp endRx			; Return from the interrupt
 
 setTstorms:
-	ldi r17, $40		; Set r17 to $20
+	ldi r17, $40		; Set r17 to $40
 	out PORTD, r17		; Output r17 to PORTD
 	lds r17, UCSR0A		; Load data from UCSR0A into r17
 	sbrs r17, RXC0		; Check if the receive buffer is empty
