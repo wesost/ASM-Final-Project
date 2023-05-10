@@ -72,6 +72,17 @@ hex_val = str(re.findall(r'\d+', todaysTemp_text)[0])           # extract the nu
 byte_val = bytes.fromhex(hex_val)                               # Format tempreture into bytes
 print(f"About to send {byte_val.hex()} to Arduino")             # Print todaysTemp to the terminal - testing purposes
 
+int(todaysTemp_text)
+tempretureValues = [24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116]
+count = 0
+for i in range(len(tempretureValues)):
+    if todaysTemp_text > temperatureValues[i]:
+        count += 1
+    elif todaysTemp_text < temperatureValues[i]:
+        count_val = bytes.fromhex(count)  
+        break
+
+
 weatherTypes = ["Clear", "Overcast", "Showers", "T-storms"]     # Creates an array of random weaher types (Used to show how program works with different weather types, weather doesnt change frequently enough) 
 random_index = random.randrange(len(weatherTypes))              # Selects a random index/weather type from the array above
 random_element = weatherTypes[random_index]                     # Sets random element to the random array index
@@ -105,7 +116,7 @@ if todaysWeather_text == "Clear":                   # Check if Clear today
     time.sleep(2)                                   
     ser.write(clv)                                  
     time.sleep(2)                                   
-    ser.write(byte_val)                             
+    ser.write(count_val)                             
     print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
 
 elif todaysWeather_text == "Overcast":              # Check if Overcast toady
@@ -113,7 +124,7 @@ elif todaysWeather_text == "Overcast":              # Check if Overcast toady
     time.sleep(2)                                  
     ser.write(ocv)                                 
     time.sleep(2)                                  
-    ser.write(byte_val)                             
+    ser.write(count_val)                             
     print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
 
 elif todaysWeather_text == "Showers":               # Check if Rainy
@@ -121,7 +132,7 @@ elif todaysWeather_text == "Showers":               # Check if Rainy
     time.sleep(2)
     ser.write(shv)
     time.sleep(2)
-    ser.write(byte_val)
+    ser.write(count)
     print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
 
 elif todaysWeather_text == "T-storms":              # Check if Thunderin and Rumblin
@@ -129,7 +140,7 @@ elif todaysWeather_text == "T-storms":              # Check if Thunderin and Rum
     time.sleep(2)
     ser.write(tsv)
     time.sleep(2)
-    ser.write(byte_val)
+    ser.write(count_val)
     print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
 
 ser.close()                                         # close the serial port
