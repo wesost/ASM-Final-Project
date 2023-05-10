@@ -28,6 +28,7 @@ import re                                                           # Used to fo
 import time                                                         # Used to time the process of sending information
 import array                                                        # Used to work with arrays
 import random                                                       # Used to select random indexs from arrays
+import struct
 
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -72,17 +73,21 @@ hex_val = str(re.findall(r'\d+', todaysTemp_text)[0])           # extract the nu
 byte_val = bytes.fromhex(hex_val)                               # Format tempreture into bytes
 print(f"About to send {byte_val.hex()} to Arduino")             # Print todaysTemp to the terminal - testing purposes
 
-int(todaysTemp_text)
-tempretureValues = [24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116]
+todaysTempre = int(hex_val)
+temperatureValues = [24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116]
 count = 0
-for i in range(len(tempretureValues)):
-    if todaysTemp_text > temperatureValues[i]:
+#count_val = '00'
+for i in range(len(temperatureValues)):
+    if todaysTempre > temperatureValues[i]:
         count += 1
-    elif todaysTemp_text < temperatureValues[i]:
-        count_val = bytes.fromhex(count)  
+    elif todaysTempre < temperatureValues[i]:
+        print(count)  
+        count_val = struct.pack('B', count)  # Convert count to a single byte
         break
 
 
+# count_str = hex(count)[2:]  # Convert the value to a string without '0x' prefix
+# count_val = bytes.fromhex(count_str)
 weatherTypes = ["Clear", "Overcast", "Showers", "T-storms"]     # Creates an array of random weaher types (Used to show how program works with different weather types, weather doesnt change frequently enough) 
 random_index = random.randrange(len(weatherTypes))              # Selects a random index/weather type from the array above
 random_element = weatherTypes[random_index]                     # Sets random element to the random array index
@@ -132,7 +137,7 @@ elif todaysWeather_text == "Showers":               # Check if Rainy
     time.sleep(2)
     ser.write(shv)
     time.sleep(2)
-    ser.write(count)
+    ser.write(count_val)
     print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
 
 elif todaysWeather_text == "T-storms":              # Check if Thunderin and Rumblin
@@ -142,6 +147,5 @@ elif todaysWeather_text == "T-storms":              # Check if Thunderin and Rum
     time.sleep(2)
     ser.write(count_val)
     print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
-
 ser.close()                                         # close the serial port
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
