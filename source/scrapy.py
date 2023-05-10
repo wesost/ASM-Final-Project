@@ -3,7 +3,7 @@
 #
 # Description:
 # ------------
-# WebScraper used to capture Data from...
+# WebScraper used to capture Data from weather.gov - Spokane tab
 #
 # Resources:
 # ----------
@@ -37,7 +37,7 @@ edge_driver_path = "edgedriver_win64\msedgedriver.exe"                          
 
 # Set the options for running the browser in headless mode
 options = webdriver.EdgeOptions()
-options.add_argument('headless')                                                                                        # Stops the webpage window from appearing every time script runs
+options.add_argument('headless')                                                                                         # Stops the webpage window from appearing every time script runs
 
 # Create an instance of the Edge driver with headless options
 driver = webdriver.Edge(executable_path=edge_driver_path, options=options)                                             
@@ -45,7 +45,7 @@ driver.get("https://forecast.weather.gov/MapClick.php?x=210&y=120&site=otx&zmx=&
 
 # Wait for the temperature element to appear for a maximum of 4 seconds
 # Allows us to ensure webpage is loaded fully before we grab the info
-element = WebDriverWait(driver,43).until(
+element = WebDriverWait(driver, 4).until(
     EC.presence_of_element_located((By.CLASS_NAME, "myforecast-current-lrg"))
 )
 
@@ -124,7 +124,7 @@ elif todaysWeather_text == "Showers":               # Check if Rainy
     ser.write(byte_val)
     print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
 
-elif todaysWeather_text == "T-storms":              #Check if Thunderin and Rumblin
+elif todaysWeather_text == "T-storms":              # Check if Thunderin and Rumblin
     ser.write(msgSend)
     time.sleep(2)
     ser.write(tsv)
@@ -133,5 +133,4 @@ elif todaysWeather_text == "T-storms":              #Check if Thunderin and Rumb
     print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
 
 ser.close()                                         # close the serial port
-
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
