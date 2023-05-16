@@ -23,8 +23,6 @@
 .DEF LED_COUNT = r24        ; Defines a register to use for LED count used throughout the program
 .DEF WEATHER_TYPE = r23     ; Defines a register to use for the weather type throughout the program
 
-.EQU ARRAY_START = $0100
-.EQU ARRAY_END = $016B
 
 ; Runs the code at the memory location
 ; reti / nop is to simply 'return' from the interrupt if it triggers (i.e. the default is to do nothing)
@@ -310,7 +308,6 @@ bitSend:
     lsl WEATHER_TYPE       ; Logical shift left WEATHER_TYPE by 1
     brcs sendOne           ; Branch to sendOne if the carry flag is set
     rjmp sendZero          ; Jump to sendZero
-
 
 
 sendOne:
