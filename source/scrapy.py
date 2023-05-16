@@ -34,29 +34,29 @@ import struct
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # SCRAPE FOR INFO:
 # ----------------
-# edge_driver_path = "edgedriver_win64\msedgedriver.exe"                                                                   # set the path to the Edge driver executable file
+edge_driver_path = "edgedriver_win64\msedgedriver.exe"                                                                   # set the path to the Edge driver executable file
 
-# # Set the options for running the browser in headless mode
-# options = webdriver.EdgeOptions()
-# options.add_argument('headless')                                                                                         # Stops the webpage window from appearing every time script runs
+# Set the options for running the browser in headless mode
+options = webdriver.EdgeOptions()
+options.add_argument('headless')                                                                                         # Stops the webpage window from appearing every time script runs
 
-# # Create an instance of the Edge driver with headless options
-# driver = webdriver.Edge(executable_path=edge_driver_path, options=options)                                             
-# driver.get("https://forecast.weather.gov/MapClick.php?x=210&y=120&site=otx&zmx=&zmy=&map_x=209&map_y=120#.ZElK5c7MLl0")  # navigate to a weather.gov spokane washingtons page
+# Create an instance of the Edge driver with headless options
+driver = webdriver.Edge(executable_path=edge_driver_path, options=options)                                             
+driver.get("https://forecast.weather.gov/MapClick.php?x=210&y=120&site=otx&zmx=&zmy=&map_x=209&map_y=120#.ZElK5c7MLl0")  # navigate to a weather.gov spokane washingtons page
 
-# # Wait for the temperature element to appear for a maximum of 4 seconds
-# # Allows us to ensure webpage is loaded fully before we grab the info
-# element = WebDriverWait(driver, 4).until(
-#     EC.presence_of_element_located((By.CLASS_NAME, "myforecast-current-lrg"))
-# )
+# Wait for the temperature element to appear for a maximum of 4 seconds
+# Allows us to ensure webpage is loaded fully before we grab the info
+element = WebDriverWait(driver, 4).until(
+    EC.presence_of_element_located((By.CLASS_NAME, "myforecast-current-lrg"))
+)
 
-# # Extract some information from the website using Selenium
-# todaysTemp = driver.find_element(By.CLASS_NAME, "myforecast-current-lrg")                                                # Looks for the current temp of Spokane in F
-# todaysTemp_text = todaysTemp.text                                                                                        # Transfers that data into text for printing        
+# Extract some information from the website using Selenium
+todaysTemp = driver.find_element(By.CLASS_NAME, "myforecast-current-lrg")                                                # Looks for the current temp of Spokane in F
+todaysTemp_text = todaysTemp.text                                                                                        # Transfers that data into text for printing        
 
-# print("TEMP: ", todaysTemp_text)                                                                                         # Prints the data to terminal to see if it is correct
+print("TEMP: ", todaysTemp_text)                                                                                         # Prints the data to terminal to see if it is correct
 
-# driver.quit()                                                                                                            # close the browser window when done
+driver.quit()                                                                                                            # close the browser window when done
 
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ time.sleep(2)                                                                  #
 # FORMAT TODAYS TEMP:
 # -------------------
 #  -> Gets TempText ready to be sent to chip to be processed
-hex_val =  random.randint(1,116)    #str(re.findall(r'\d+', todaysTemp_text)[0])           # extract the number part from todaysTemp_text
+hex_val =  str(re.findall(r'\d+', todaysTemp_text)[0])            # random.randint(1,116)            # extract the number part from todaysTemp_text
 # byte_val = bytes.fromhex(hex_val)                               # Format tempreture into bytes
 # print(f"About to send {byte_val.hex()} to Arduino")             # Print todaysTemp to the terminal - testing purposes
 
@@ -122,7 +122,7 @@ if todaysWeather_text == "Clear":                   # Check if Clear today
     ser.write(clv)                                  
     time.sleep(2)                                   
     ser.write(count_val)                             
-    # print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
+    # print(f"Sent {byte_val.hex()} to Arduino")    # Print value of temp - Testing purposes
 
 elif todaysWeather_text == "Overcast":              # Check if Overcast toady
     ser.write(msgSend)                              
@@ -130,7 +130,7 @@ elif todaysWeather_text == "Overcast":              # Check if Overcast toady
     ser.write(ocv)                                 
     time.sleep(2)                                  
     ser.write(count_val)                             
-    # print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
+    # print(f"Sent {byte_val.hex()} to Arduino")    # Print value of temp - Testing purposes
 
 elif todaysWeather_text == "Showers":               # Check if Rainy
     ser.write(msgSend)
@@ -138,7 +138,7 @@ elif todaysWeather_text == "Showers":               # Check if Rainy
     ser.write(shv)
     time.sleep(2)
     ser.write(count_val)
-    # print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
+    # print(f"Sent {byte_val.hex()} to Arduino")    # Print value of temp - Testing purposes
 
 elif todaysWeather_text == "T-storms":              # Check if Thunderin and Rumblin
     ser.write(msgSend)
@@ -146,6 +146,6 @@ elif todaysWeather_text == "T-storms":              # Check if Thunderin and Rum
     ser.write(tsv)
     time.sleep(2)
     ser.write(count_val)
-    # print(f"Sent {byte_val.hex()} to Arduino")      # Print value of temp - Testing purposes
+    # print(f"Sent {byte_val.hex()} to Arduino")    # Print value of temp - Testing purposes
 ser.close()                                         # close the serial port
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
