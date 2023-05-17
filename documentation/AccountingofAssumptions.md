@@ -3,6 +3,8 @@
 #### Authors: Wes and Cade
 #### Date: 5/16/2023
 ---
+## VIDEO LINKS: https://www.youtube.com/shorts/U3yyU9lK8Zc | https://www.youtube.com/shorts/CwkMbfWHXT4
+---
 ## Assumptions:
     1. ASSUMPTION: Weather input is provided to the microcontroller in a format that can be interpreted by 
                    the code.

@@ -3,6 +3,8 @@
 #### Authors: Wes and Cade
 #### Date: 5/16/2023
 ---
+## VIDEO LINKS: https://www.youtube.com/shorts/U3yyU9lK8Zc | https://www.youtube.com/shorts/CwkMbfWHXT4
+---
 ## Introduction (What You need):
     This user manual provides instructions on how to use the weather based NeoPixle ring. The code is written in assembly language and is designed to control the colors of LEDs based on different weather conditions and temperature received from a python web scraper.
 

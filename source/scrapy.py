@@ -14,7 +14,11 @@
 # https://docs.python.org/3/library/time.html
 # Scott Office Hours 
 # https://whitgit.whitworth.edu/2023/spring/CS-278-1/in_class/-/blob/main/Directives_EEPROM_class/source/mem_testing_solution.asm
-
+#
+# Project Demo Links:
+# -------------------
+#  -VIDEO LINKS: https://www.youtube.com/shorts/U3yyU9lK8Zc | https://www.youtube.com/shorts/CwkMbfWHXT4
+#
 
 # --------------
 # PROGRAM START:

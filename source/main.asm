@@ -14,6 +14,11 @@
 ;  https://whitgit.whitworth.edu/2023/spring/CS-278-1/in_class/-/blob/main/Directives_EEPROM_class/source/mem_testing_solution.asm
 ;  Scott Office Hours
 ;  https://cdn-shop.adafruit.com/product-files/1138/SK6812+LED+datasheet+.pdf
+;
+; Project Demo Links:
+; -------------------
+;  -VIDEO LINKS: https://www.youtube.com/shorts/U3yyU9lK8Zc | https://www.youtube.com/shorts/CwkMbfWHXT4
+
 
 .DEVICE ATmega328p ;Define the correct device
 ;;;;;;;;;;;;;;;;;;;;;;;

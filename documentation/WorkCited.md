@@ -3,6 +3,8 @@
 #### Authors: Wes and Cade
 #### Date: 5/16/2023
 ---
+## VIDEO LINKS: https://www.youtube.com/shorts/U3yyU9lK8Zc | https://www.youtube.com/shorts/CwkMbfWHXT4
+---
 ## Note:
     All sources are in the top of each document, but to meet the README requirement here is a list of all of the sources we used.
 ---

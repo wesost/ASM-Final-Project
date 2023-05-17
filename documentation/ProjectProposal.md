@@ -3,6 +3,8 @@
 ####  Professor: Scott
 ####  Authors: Cade and Wes
 ---
+## VIDEO LINKS: https://www.youtube.com/shorts/U3yyU9lK8Zc | https://www.youtube.com/shorts/CwkMbfWHXT4
+---
 ## Description:
     THE GRAND IDEA: 
         For this final is to create a reputation monitor. Information will be retrieved from social media platforms that track various metrics, hashtags, or dislikes. The data would then be put through a validity checker to give us an accuracy rating or score. The lights on a Neo pixel strip will then be programmed using the score once it has passed through our ATmega chip, acting as a form of dynamic pie chart.
