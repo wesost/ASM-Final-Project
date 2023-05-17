@@ -81,7 +81,7 @@ for i in range(len(temperatureValues)):                                         
     if todaysTempre >= temperatureValues[i]:                                                                                # If todays temp is greater or equal to current index
         count += 1                                                                                                          # Increase count by one
     elif todaysTempre < temperatureValues[i]:                                                                               # If todays temp is less than the current index exit
-        print(count)                                                                                                        # Print count to terminal - testing purposes
+        # print(count)                                                                                                      # Print count to terminal - testing purposes
         count_val = struct.pack('B', count)                                                                                 # Convert count to a single byte
         break
 
